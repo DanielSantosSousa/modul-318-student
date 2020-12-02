@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Windows.Forms;
 using SwissTransport;
 
@@ -18,18 +19,22 @@ namespace MyTransportApp {
     {
       try
       {
-
-      
-      string SearchDate = dtpConnectionDate.Value.ToString("yyyy-MM-dd");
-      string SearchTime = dtpConnectionTime.Value.ToString("HH:mm");
-      var StationFrom = _transport.GetStations(cbxFrom.Text).StationList.ElementAt(0);
-      var StationTo = _transport.GetStations(cbxTo.Text).StationList.ElementAt(0);
-      cbxFrom.Text = StationFrom.Name;
-      cbxTo.Text = StationTo.Name;
-      _OeVApp.FillDataGridViewWithConnections(Verbindungen, StationFrom.Name, StationTo.Name, SearchDate, SearchTime);
-      } catch (ArgumentException Exception)
+        string SearchDate = dtpConnectionDate.Value.ToString("yyyy-MM-dd");
+        string SearchTime = dtpConnectionTime.Value.ToString("HH:mm");
+        var StationFrom = _transport.GetStations(cbxFrom.Text).StationList.ElementAt(0);
+        var StationTo = _transport.GetStations(cbxTo.Text).StationList.ElementAt(0);
+        cbxFrom.Text = StationFrom.Name;
+        cbxTo.Text = StationTo.Name;
+        _OeVApp.FillDataGridViewWithConnections(Verbindungen, StationFrom.Name, StationTo.Name, SearchDate, SearchTime);
+      }
+      catch (WebException)
       {
-        MessageBox.Show("Bitte eine gültige Station eingeben", "Stations Fehler", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        MessageBox.Show("Verbindung Fehlgeschlagen, verifizieren sie ihre Internetverbindung", "Verbindungsfehler", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+      }
+      catch (ArgumentException)
+      {
+        MessageBox.Show("Bitte eine gültige Station eingeben", "Stations Fehler", MessageBoxButtons.OK,
+          MessageBoxIcon.Warning);
       }
     }
 
