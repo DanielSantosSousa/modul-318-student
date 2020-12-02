@@ -16,6 +16,10 @@ namespace MyTransportApp {
 
     private void btnSearch_Click(object sender, EventArgs e)
     {
+      try
+      {
+
+      
       string SearchDate = dtpConnectionDate.Value.ToString("yyyy-MM-dd");
       string SearchTime = dtpConnectionTime.Value.ToString("HH:mm");
       var StationFrom = _transport.GetStations(cbxFrom.Text).StationList.ElementAt(0);
@@ -23,13 +27,23 @@ namespace MyTransportApp {
       cbxFrom.Text = StationFrom.Name;
       cbxTo.Text = StationTo.Name;
       _OeVApp.FillDataGridViewWithConnections(Verbindungen, StationFrom.Name, StationTo.Name, SearchDate, SearchTime);
+      } catch (ArgumentException Exception)
+      {
+        MessageBox.Show("Bitte eine gültige Station eingeben", "Stations Fehler", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+      }
     }
 
     private void btnSearchConnection_Click(object sender, EventArgs e)
     {
-      var Station = _transport.GetStations(cbxStation.Text).StationList.ElementAt(0);
+      try
+      {
+        var Station = _transport.GetStations(cbxStation.Text).StationList.ElementAt(0);
       cbxStation.Text = Station.Name;
       _OeVApp.FillConnectionsBoard(VerbindungenAbStation, Station);
+      } catch (Exception Exception)
+      {
+        MessageBox.Show("Bitte eine gültige Station eingeben", "Stations Fehler", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+      }
     }
 
     private void cbxFrom_KeyUp(object sender, KeyEventArgs e)
@@ -82,7 +96,15 @@ namespace MyTransportApp {
 
     private void btnShowStationCloseBy_Click(object sender, EventArgs e)
     {
-      _OeVApp.ShowStationOnMap(lbxStationCloseBy.SelectedItem.ToString());
+      try
+      {
+        if (lbxStationCloseBy.SelectedItem != null)
+          _OeVApp.ShowStationOnMap(lbxStationCloseBy.SelectedItem.ToString());
+      }
+      catch (Exception Exception)
+      {
+        MessageBox.Show("Bitte ein Element auswählen!\n","Fehlende Auswahl", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+      }
     }
 
     private void btnSwitch_Click(object sender, EventArgs e)

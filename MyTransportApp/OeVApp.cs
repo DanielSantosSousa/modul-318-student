@@ -9,7 +9,7 @@ namespace MyTransportApp
   public class OeVApp
   {
     ITransport _transport = new Transport();
-    private GeoCoordinateWatcher Watcher = new GeoCoordinateWatcher(GeoPositionAccuracy.Default);
+    private GeoCoordinateWatcher _watcher = new GeoCoordinateWatcher(GeoPositionAccuracy.Default);
     public void FillDataGridViewWithConnections(DataGridView Verbindungen, string StationFrom, string StationTo, string SearchDate, string SearchTime)
     {
       var Connections = _transport.GetConnections(StationFrom, StationTo, SearchDate, SearchTime).ConnectionList;
@@ -55,10 +55,26 @@ namespace MyTransportApp
 
     public void FillListBoxWithStationsCloseBy(ListBox List)
     {
-      var Location = Watcher.Position.Location;
-
-      var Latitude = Location.Latitude.ToString("0.000000");
-      var Longitude = Location.Longitude.ToString("0.000000");
+      var Location = _watcher.Position.Location;
+      string Latitude;
+      string Longitude;
+      int i = 0;
+      _watcher.Start();
+      Cursor.Current = Cursors.WaitCursor;
+      do
+      {
+        //if damit der loop nicht für immer weitergeht, die Zahl hab ich mir zufällig ausgedacht.
+        if (i == 50000000)
+        {
+          MessageBox.Show("Coordinaten konnten nicht gelesen werden!", "Fehler beim herauslesen der Koordinaten", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+          Cursor.Current = Cursors.Default;
+          return;
+        }
+        i++;
+        Latitude = Location.Latitude.ToString("0.000000");
+        Longitude = Location.Longitude.ToString("0.000000");
+      } while (Latitude == "NaN");
+      _watcher.Stop();
 
       var Stations = _transport.GetStations(Convert.ToDouble(Latitude), Convert.ToDouble(Longitude)).StationList;
       List.Items.Clear();
@@ -66,6 +82,7 @@ namespace MyTransportApp
       {
         List.Items.Add(Station.Name);
       }
+      Cursor.Current = Cursors.Default;
     }
   }
 }
