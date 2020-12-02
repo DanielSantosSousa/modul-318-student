@@ -6,7 +6,7 @@ using System.Device.Location;
 
 namespace MyTransportApp
 {
-  class OeVApp
+  public class OeVApp
   {
     ITransport _transport = new Transport();
     private GeoCoordinateWatcher Watcher = new GeoCoordinateWatcher(GeoPositionAccuracy.Default);
