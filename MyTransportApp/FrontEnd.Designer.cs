@@ -385,7 +385,7 @@
       this.Controls.Add(this.StationsCloseBy);
       this.Margin = new System.Windows.Forms.Padding(2);
       this.Name = "connectionSearch";
-      this.Text = "Form1";
+      this.Text = "MyÖVApp";
       this.StationsCloseBy.ResumeLayout(false);
       this.tabConnections.ResumeLayout(false);
       this.tabConnections.PerformLayout();
